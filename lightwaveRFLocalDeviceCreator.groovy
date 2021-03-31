@@ -63,11 +63,10 @@ def updated() {
 def initialize() {
     removeChildDevices(getChildDevices(true))  
     try {
- 
- 		 getUser()
-         getAuth()
-          getProfile()
-    } catch (e) {
+	getUser()
+        getAuth()
+        getProfile()
+    	} catch (e) {
             log.error "error: $e"
         }    
 }
@@ -81,12 +80,9 @@ def getUser()
         ]
         log.debug "user ${settings.username}"
         try {
-            httpGet(userParams){ resp ->
+            	httpGet(userParams){ resp ->
                 state.key = resp.data.application_key
-                }
-              
-            
-            
+            }     
         } catch (e) {
             log.error "user error: ${e}"
         }        
@@ -105,9 +101,6 @@ def getAuth()
             httpGet(authParams){ resp ->
                 state.token = resp.data.token
                 }
-              
-            
-            
         } catch (e) {
             log.error "auth error: ${e}"
         }        
@@ -117,7 +110,7 @@ def getProfile()
 {
     def deviceHandlers=['Lightwave On Off Device',  'Lightwave Dimmer Switch', 'Lightwave Inline Relay Device']
     def profileParams = [
-   		     uri:  'https://control-api.lightwaverf.com/v1/',
+   	    uri:  'https://control-api.lightwaverf.com/v1/',
             path: 'user_profile',
             contentType: 'application/json',
             query: [nested: '1', exclude_heating_plans: '1'],
@@ -129,40 +122,39 @@ def getProfile()
                     estate.locations.each { lwLocation ->
                     lwLocation.zones.each {zone ->
                       	def dev=""
-         				 zone.rooms.each {room ->
-                
- 					  	room.devices.each { device ->
-                        	dev  += "\nRoom ${room.room_number}: ${room.name} Device ${device.device_number}: ${device.name} ${device.device_type_id} ${device.device_type_name}"
-                     		
-                            
-                            dev += " adding ${deviceHandlers[device.device_type_id - 1]}"
-                            def networkID="LWLOCAL${room.room_number}-${device.device_number}"
-                            
-                            def preferenceParams = [
-                            	serverIP: settings.serverIP,
-                                lightwaveIP: settings.lightwaveIP,
-                                roomID: room.room_number,
-                                deviceID: device.device_number]
-                          
-                         
-                            def deviceParams = [
-                            	label: "${room.name} ${device.name}",
-                                name: "${room.name} ${device.name}",
-                                preferences: preferenceParams,
-                                completedSetup: true
-                            ]
-                             
+         		zone.rooms.each {room ->
+                		room.devices.each { device ->
+					dev  += "\nRoom ${room.room_number}: ${room.name} Device ${device.device_number}: ${device.name} ${device.device_type_id} ${device.device_type_name}"
+					if (device.device_type_id >0 && device.device_type_id <4)
+					{
+						dev += " adding ${deviceHandlers[device.device_type_id - 1]}"
+						def networkID="LWLOCAL${room.room_number}-${device.device_number}"
 
-            
-                            addChildDevice(deviceHandlers[device.device_type_id - 1], networkID , location.hubs[0].id, deviceParams)
-                        }
+						def preferenceParams = [
+							serverIP: settings.serverIP,
+							lightwaveIP: settings.lightwaveIP,
+							roomID: room.room_number,
+							deviceID: device.device_number
+						]
+
+
+						def deviceParams = [
+							label: "${room.name} ${device.name}",
+							name: "${room.name} ${device.name}",
+							preferences: preferenceParams,
+							completedSetup: true
+						]
+
+
+						addChildDevice(deviceHandlers[device.device_type_id - 1], networkID , location.hubs[0].id, deviceParams)
+					}
+                        	}
                        }
-                           log.info "${dev}"
+                       log.info "${dev}"
+                     }	
                   }
-                     }
-                 }
-              }
-            
+                }
+	     }   
             
         } catch (e) {
             log.error "profile error: ${e}"
