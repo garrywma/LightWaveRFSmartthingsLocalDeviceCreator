@@ -26,10 +26,10 @@ definition(
 
 preferences {
 	section("LightWaveRF Login Settings") {
-		    input "username", "text", title: "LightWaveRF Connect Username", required: true
+	    input "username", "text", title: "LightWaveRF Connect Username", required: true
             input "password", "password", title: "LightWaveRF Connect Password", required: true
             paragraph "Notes: This does not support smart series devices as they do not use the local api. It also does not support legacy logins with a pin number."
-			paragraph "Important: all three of the device handlers from Adam Clarke's LightwaverRF NodeJS project need to be installed prior to installing this Smart App. Also please note that uninstalling this smart app will delete all created devices. Reinstalling will re-create the devices."
+	    paragraph "Important: all three of the device handlers from Adam Clarke's LightwaverRF NodeJS project need to be installed prior to installing this Smart App. Also please note that uninstalling this smart app will delete all created devices. Reinstalling will re-create the devices."
     }
     section("Server Address Settings") {
             input("serverIP", "text", title: "Server IP Address", description: "IP Address of the Node JS Server")
