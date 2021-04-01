@@ -28,7 +28,7 @@ preferences {
 	section("LightWaveRF Login Settings") {
 	    input "username", "text", title: "LightWaveRF Connect Username", required: true
             input "password", "password", title: "LightWaveRF Connect Password", required: true
-            paragraph "Notes: This does not support smart series devices as they do not use the local api. It also does not support legacy logins with a pin number."
+            paragraph "Notes: This does not support smart series devices as they do not use the local api. It also does not support legacy logins with a pin number unless that pin has been used to log in to manager.lightwaverf.com."
 	    paragraph "Important: all three of the device handlers from Adam Clarke's LightwaverRF NodeJS project need to be installed prior to installing this Smart App. Also please note that uninstalling this smart app will delete all created devices. Reinstalling will re-create the devices."
     }
     section("Server Address Settings") {
